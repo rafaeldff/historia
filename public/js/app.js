@@ -5,10 +5,12 @@ function addToList(commits) {
     });
 }
 
-function addNodes(g, commits) {
+function addCommitNodes(g, commits) {
     $(commits).each(function (i, commit) {
       var oid = commit["oid"];
-      g.addNode(oid, { label: commit["message"] });
+      if (! g.hasNode(oid)) {
+        g.addNode(oid, {label: commit["message"]});
+      }
     });
 }
 
@@ -16,8 +18,8 @@ function addEdges(g, commits) {
   $(commits).each(function (i, commit) {
     var oid = commit["oid"];
     $(commit["parents"]).each(function(i, parent_oid) {
-      console.log(oid, parent_oid);
-      //g.addEdge(oid, parent_oid);
+      console.log(" node::", oid, " parent:: ", parent_oid);
+      g.addEdge(null, oid, parent_oid, {});
       console.log("aft commit ", i)
     });
   });
@@ -32,7 +34,7 @@ $(function() {
   $.get("/commits", function (commits) {
     var g = new dagreD3.Digraph();
     addToList(commits);
-    addNodes(g, commits);
+    addCommitNodes(g, commits);
     addEdges(g, commits);
     draw(g);
   })
