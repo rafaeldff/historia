@@ -26,8 +26,9 @@ function addEdges(g, commits) {
 }
 
 function draw(g) {
+  var layout = dagreD3.layout().nodeSep(40).rankDir("LR");
   var renderer = new dagreD3.Renderer();
-  renderer.run(g, d3.select("svg g"));
+  renderer.layout(layout).run(g, d3.select("svg g"));
 }
 
 $(function() {
