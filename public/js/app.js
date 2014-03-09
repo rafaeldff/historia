@@ -18,9 +18,7 @@ function addEdges(g, commits) {
   $(commits).each(function (i, commit) {
     var oid = commit["oid"];
     $(commit["parents"]).each(function(i, parent_oid) {
-      console.log(" node::", oid, " parent:: ", parent_oid);
       g.addEdge(null, oid, parent_oid, {});
-      console.log("aft commit ", i)
     });
   });
 }
@@ -28,7 +26,10 @@ function addEdges(g, commits) {
 function draw(g) {
   var layout = dagreD3.layout().nodeSep(40).rankDir("LR");
   var renderer = new dagreD3.Renderer();
-  renderer.layout(layout).run(g, d3.select("svg g"));
+  var rendered = renderer.layout(layout).run(g, d3.select("svg g"));
+  console.log("rd ", rendered)
+  console.log("Setting width ", rendered._value.width);
+  $("#commits-graph").width(rendered._value.width);
 }
 
 $(function() {
