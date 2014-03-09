@@ -1,9 +1,12 @@
 require 'sinatra'
 require 'json'
+require 'yaml'
 require 'rugged'
 
+CONFIG = YAML.load(File.read 'config/config.yml')
+
 def get_commits
-  repo = Rugged::Repository.new("/home/rff/bin/rgit")
+  repo = Rugged::Repository.new CONFIG['repository_path']
   walker = Rugged::Walker.new(repo)
   walker.push(repo.head.target)
   commits = [].tap do |commits|
@@ -17,5 +20,8 @@ get '/commits' do
 end
 
 get "/" do
+  puts "====================" 
+  puts CONFIG.inspect
+  puts "====================" 
   redirect "/index.html"
 end
