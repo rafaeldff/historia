@@ -26,16 +26,21 @@ function addEdges(g, commits) {
 function draw(g) {
   var layout = dagreD3.layout().nodeSep(40).rankDir("LR");
   var renderer = new dagreD3.Renderer();
-  var rendered = renderer.layout(layout).run(g, d3.select("svg g"));
-  console.log("rd ", rendered)
-  console.log("Setting width ", rendered._value.width);
-  $("#commits-graph").width(rendered._value.width);
+  svg = d3.select("svg g")
+  var rendered = renderer.layout(layout).run(g, svg);
+  var zoom = d3.behavior.zoom()
+    .on("zoom",function() {
+      svg.attr("transform","translate("+ 
+        d3.event.translate.join(",")+")scale("+d3.event.scale+")");
+      svg.selectAll("path")  
+      .attr("d", path.projection(projection)); 
+    });
+  d3.select("svg").call(zoom)
 }
 
 $(function() {
   $.get("/commits", function (commits) {
     var g = new dagreD3.Digraph();
-    //addToList(commits);
     addCommitNodes(g, commits);
     addEdges(g, commits);
     draw(g);
