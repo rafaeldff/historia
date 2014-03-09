@@ -34,8 +34,6 @@ function draw(g) {
     .on("zoom",function() {
       svgg.attr("transform","translate("+ 
         d3.event.translate.join(",")+")scale("+d3.event.scale+")");
-      svgg.selectAll("path")  
-      .attr("d", path.projection(projection)); 
     });
   svg.call(zoom);
 }
