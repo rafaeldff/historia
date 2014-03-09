@@ -35,7 +35,7 @@ function draw(g) {
 $(function() {
   $.get("/commits", function (commits) {
     var g = new dagreD3.Digraph();
-    addToList(commits);
+    //addToList(commits);
     addCommitNodes(g, commits);
     addEdges(g, commits);
     draw(g);

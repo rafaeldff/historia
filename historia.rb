@@ -20,8 +20,5 @@ get '/commits' do
 end
 
 get "/" do
-  puts "====================" 
-  puts CONFIG.inspect
-  puts "====================" 
   redirect "/index.html"
 end
