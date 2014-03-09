@@ -26,16 +26,18 @@ function addEdges(g, commits) {
 function draw(g) {
   var layout = dagreD3.layout().nodeSep(40).rankDir("LR");
   var renderer = new dagreD3.Renderer();
-  svg = d3.select("svg g")
-  var rendered = renderer.layout(layout).run(g, svg);
+  var svg = d3.select("svg");
+  var svgg = svg.select("g");
+
+  var rendered = renderer.layout(layout).run(g, svgg);
   var zoom = d3.behavior.zoom()
     .on("zoom",function() {
-      svg.attr("transform","translate("+ 
+      svgg.attr("transform","translate("+ 
         d3.event.translate.join(",")+")scale("+d3.event.scale+")");
-      svg.selectAll("path")  
+      svgg.selectAll("path")  
       .attr("d", path.projection(projection)); 
     });
-  d3.select("svg").call(zoom)
+  svg.call(zoom);
 }
 
 $(function() {
