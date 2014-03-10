@@ -17,3 +17,7 @@ svg {
     stroke-width: 1.5px;
     fill: none;
 }
+
+.navbar-form input {
+    width: 90%;
+}
