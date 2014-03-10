@@ -38,11 +38,20 @@ function draw(g) {
   svg.call(zoom);
 }
 
-$(function() {
-  $.get("/commits", function (commits) {
+function update(commits) {
+    console.log("Updating...");
     var g = new dagreD3.Digraph();
     addCommitNodes(g, commits);
     addEdges(g, commits);
     draw(g);
-  })
+}
+
+$(function() {
+  $.get("/commits", update);
+  $("form.navbar-form").on("submit", function(event) {
+    event.preventDefault();
+    console.log($(this));
+    $.get("/commits", $(this).serializeArray(), update);
+    return false;
+  });
 })

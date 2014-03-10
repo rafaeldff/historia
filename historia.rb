@@ -5,10 +5,15 @@ require 'rugged'
 
 CONFIG = YAML.load(File.read 'config/config.yml')
 
+def range_spec
+  (params["range"].nil? || params["range"].empty?) ? nil : params["range"]
+end
+
 def get_commits
   repo = Rugged::Repository.new CONFIG['repository_path']
+  range = range_spec || repo.head.target
   walker = Rugged::Walker.new(repo)
-  walker.push(repo.head.target)
+  walker.push(range)
   commits = [].tap do |commits|
     walker.each {|c| commits.push message: c.message, oid: c.oid, parents: c.parents.map(&:oid)}
   end
