@@ -31,5 +31,12 @@ describe Historia::Revision do
         Historia::Revision.new(repo, 'v1').to_commit.should eq repo.head.target
       end
     end
+
+    context :relative_references do
+      it "locates a reference relative to the parent" do
+        Historia::Revision.new(repo, '90924db0^').to_commit.should eq repo.head.target.parents.first
+        Historia::Revision.new(repo, '90924db0^^').to_commit.should eq repo.head.target.parents.first.parents.first
+      end
+    end
   end
 end

@@ -6,10 +6,26 @@ class Historia::Revision
   end
 
   def to_commit
-    deref(try_sha || try_full_reference || try_short_branch || try_short_tag)
+
+    reference = try_parent || try_sha || try_full_reference || try_short_branch || try_short_tag
+    deref(reference)
   end
 
   private
+  def try_parent
+    if (m = /^([^^]+)(\^+)$/.match revname)
+      child = self.class.new(repo, m[1]).to_commit
+      parents = m[2].size
+      get_ancestor child, parents
+    end
+  end
+
+  def get_ancestor child, parents
+    return child if parents == 0
+    return nil if child.parents.empty?
+    get_ancestor child.parents.first, parents - 1
+  end
+
   def try_sha
     repo.lookup(revname) rescue nil
   end
