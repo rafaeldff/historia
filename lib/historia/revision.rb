@@ -7,17 +7,29 @@ class Historia::Revision
 
   def to_commit
 
-    reference = try_parent || try_sha || try_full_reference || try_short_branch || try_short_tag
+    reference = try_numbered || try_parent || try_sha || try_full_reference || try_short_branch || try_short_tag
     deref(reference)
   end
 
   private
+  def try_numbered
+    if (m = /^([^~]+)~([0-9]+)$/.match revname)
+      child = self.class.new(repo, m[1]).to_commit
+      parents = m[2].to_i
+      get_ancestor child, parents
+    end
+  rescue
+    nil
+  end
+
   def try_parent
     if (m = /^([^^]+)(\^+)$/.match revname)
       child = self.class.new(repo, m[1]).to_commit
       parents = m[2].size
       get_ancestor child, parents
     end
+  rescue
+    nil
   end
 
   def get_ancestor child, parents
