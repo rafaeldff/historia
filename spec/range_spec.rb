@@ -5,28 +5,6 @@ describe Historia::Range do
   let (:repo) { Rugged::Repository.new 'spec/support/fixtures/simple' }
   let (:commit) { repo.head.target }
   
-  context "commands" do
-    let (:revision) { stub(:to_sha => "sha") }
-
-    it "push command pushes the revision's commit to the walker" do
-      command = Historia::Range.push(revision)
-      command.name.should == :push
-
-      walker.should_receive(:push).with "sha"
-
-      command.call(walker)
-    end
-
-    it "hide command hides the commit for the given revision on the walker" do
-      command = Historia::Range.hide(revision)
-      command.name.should == :hide
-
-      walker.should_receive(:hide).with "sha"
-
-      command.call(walker)
-    end
-  end
-
   context "parse" do
     it "a single sha becomes a single push" do
       range = Historia::Range.new repo, "90924db0"
