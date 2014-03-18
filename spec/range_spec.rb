@@ -40,6 +40,14 @@ describe Historia::Range do
       range.apply_to walker
     end
 
+    it "understands a range given by two dots" do
+      range = Historia::Range.new repo, "5721551..5b2691f"
+
+      walker.should_receive(:hide).with "57215519751903cbe2be1a3ec9599093f2def119"
+      walker.should_receive(:push).with "5b2691f3cf7a544dcff3463ff0ce34204aa2dba0"
+
+      range.apply_to walker
+    end
   end
 end
 

@@ -13,11 +13,14 @@ class Historia::Range
 
   private
   def commands
-    rangespec.split(/\s+/).map do |range_part|
-      if (negation=/^\^(.*)/.match range_part)
-        hide(revision negation[1])
+    rangespec.split(/\s+/).flat_map do |range_part|
+      if (negation = /^\^(.*)$/.match range_part)
+        [hide(revision negation[1])]
+      elsif (symetric = /^(.*)\.\.(.*)$/.match range_part)
+        [hide(revision symetric[1]),
+         push(revision symetric[2])]
       else
-        push(revision range_part)
+        [push(revision range_part)]
       end
     end
   end
