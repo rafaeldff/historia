@@ -36,8 +36,10 @@ class Historia::Range
 
   private
   def commands
-    shas = commands.split /\s+/
-    revision = Historia::Revision.new repo, rangespec
-    [self.class.push(revision)]
+    shas = @rangespec.split /\s+/
+    shas.map do |sha|
+      revision = Historia::Revision.new repo, sha
+      self.class.push(revision)
+    end
   end
 end
