@@ -44,4 +44,11 @@ describe Historia::Revision do
       end
     end
   end
+
+  describe :to_sha do
+    it "returns the sha corresponding to the located commit" do
+        Historia::Revision.new(repo, '90924db0').to_sha.should eq repo.head.target_id
+        Historia::Revision.new(repo, 'master').to_sha.should eq repo.head.target_id
+    end
+  end
 end

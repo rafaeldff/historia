@@ -6,9 +6,12 @@ class Historia::Revision
   end
 
   def to_commit
-
     reference = try_numbered || try_parent || try_sha || try_full_reference || try_short_branch || try_short_tag
     deref(reference)
+  end
+
+  def to_sha
+    to_commit.oid
   end
 
   private
