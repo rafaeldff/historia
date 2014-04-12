@@ -10,10 +10,16 @@ describe Historia::Revision do
   attr_reader :second_sha
   attr_reader :second_short
 
-  before (:all) {
+  def init repo
+    repo_dir = "spec/support/fixtures/#{repo}"
+
     FileUtils.rm_rf repo_dir
     FileUtils.mkdir_p repo_dir
-    @repo = Rugged::Repository.init_at repo_dir
+    Rugged::Repository.init_at repo_dir
+  end
+
+  before (:all) {
+    @repo = init "a" 
 
     oid = repo.write("x", :blob)
     index = Rugged::Index.new.tap{|index| index.add path: "f", oid: oid, mode:  0100644}
