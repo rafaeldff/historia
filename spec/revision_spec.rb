@@ -18,27 +18,23 @@ describe Historia::Revision do
     Rugged::Repository.init_at repo_dir
   end
 
-  before (:all) {
-    @repo = init "a" 
-
+  def commit repo, *parents
     oid = repo.write("x", :blob)
     index = Rugged::Index.new.tap{|index| index.add path: "f", oid: oid, mode:  0100644}
 
-    commit1 = Rugged::Commit.create(repo,  {message: "1",
+    Rugged::Commit.create(repo,  {message: "message",
                                   update_ref: 'HEAD',
                                   tree: index.write_tree(repo),
-                                  parents: []})
-    @first_sha = commit1
+                                  parents: parents})
+  end
+
+  before (:all) {
+    @repo = init "a" 
+
+    @first_sha = commit @repo
     @first_short = @first_sha[0..6]
 
-    oid = repo.write("xx", :blob)
-    index = Rugged::Index.new.tap{|index| index.add path: "f", oid: oid, mode:  0100644}
-
-    commit2 = Rugged::Commit.create(repo,  {message: "2",
-                                  update_ref: 'HEAD',
-                                  tree: index.write_tree(repo),
-                                  parents: [commit1]})
-    @second_sha = commit2
+    @second_sha = commit @repo, @first_sha
     @second_short = @second_sha[0..6]
 
     repo.tags.create('v1', repo.head.target, {message: 'msg'})
