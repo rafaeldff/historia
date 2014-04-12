@@ -15,3 +15,7 @@ end
 
 require 'rugged'
 require_relative '../lib/historia'
+
+Dir.glob(File.expand_path File.join(__FILE__, "../support/*.rb")).each do |support_script|
+  require support_script
+end
