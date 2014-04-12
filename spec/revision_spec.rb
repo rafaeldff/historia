@@ -2,22 +2,20 @@ require 'spec_helper.rb'
 require 'fileutils'
 
 describe Historia::Revision do
-  @repo, @first_sha, @first_short, @second_sha, @second_short = [nil, nil, nil, nil, nil]
+  @repo, @first,  @second, @second_short = [nil, nil, nil, nil, nil]
   let (:repo_dir)  { 'spec/support/fixtures/a' }
   attr_reader :repo
-  attr_reader :first_sha
-  attr_reader :first_sha
-  attr_reader :second_sha
+  attr_reader :first
+  attr_reader :second
   attr_reader :second_short
 
   before (:all) {
     @repo = init "a" 
 
-    @first_sha = commit @repo
-    @first_short = @first_sha[0..6]
+    @first = commit @repo
 
-    @second_sha = commit @repo, @first_sha
-    @second_short = @second_sha[0..6]
+    @second = commit @repo, @first
+    @second_short = @second[0..6]
 
     repo.tags.create('v1', repo.head.target, {message: 'msg'})
   }
@@ -25,11 +23,11 @@ describe Historia::Revision do
   describe :to_commit do
     context :shas do
       it "locates the commit from a given sha" do
-        Historia::Revision.new(repo, second_sha).to_commit.should eq repo.head.target
+        Historia::Revision.new(repo, second).to_commit.should eq repo.head.target
       end
 
       it "locates the commit from a shortened sha" do
-        Historia::Revision.new(repo, second_short).to_commit.should eq repo.head.target
+        Historia::Revision.new(repo, short(second)).to_commit.should eq repo.head.target
       end
     end
 
@@ -53,20 +51,20 @@ describe Historia::Revision do
 
     context :relative_references do
       it "locates a reference relative to the parent" do
-        Historia::Revision.new(repo, "#{second_short}^").to_commit.should eq repo.head.target.parents.first
-        Historia::Revision.new(repo, "#{second_short}^^").to_commit.should eq repo.head.target.parents.first.parents.first
+        Historia::Revision.new(repo, "#{short second}^").to_commit.should eq repo.head.target.parents.first
+        Historia::Revision.new(repo, "#{short second}^^").to_commit.should eq repo.head.target.parents.first.parents.first
       end
 
       it "locates a numbered relative reference" do
-        Historia::Revision.new(repo, "#{second_short}~1").to_commit.should eq repo.head.target.parents.first
-        Historia::Revision.new(repo, "#{second_short}~2").to_commit.should eq repo.head.target.parents.first.parents.first
+        Historia::Revision.new(repo, "#{short second}~1").to_commit.should eq repo.head.target.parents.first
+        Historia::Revision.new(repo, "#{short second}~2").to_commit.should eq repo.head.target.parents.first.parents.first
       end
     end
   end
 
   describe :to_sha do
     it "returns the sha corresponding to the located commit" do
-        Historia::Revision.new(repo, second_short).to_sha.should eq repo.head.target_id
+        Historia::Revision.new(repo, short(second)).to_sha.should eq repo.head.target_id
         Historia::Revision.new(repo, 'master').to_sha.should eq repo.head.target_id
     end
   end

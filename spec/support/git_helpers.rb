@@ -16,3 +16,6 @@ def commit repo, *parents
                                 parents: parents})
 end
 
+def short commit_sha
+  commit_sha[0..6]
+end
