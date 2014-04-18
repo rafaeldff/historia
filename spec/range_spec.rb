@@ -5,6 +5,15 @@ describe Historia::Range do
   let (:repo) { Rugged::Repository.new 'spec/support/fixtures/house' }
   let (:commit) { repo.head.target }
   
+  before (:all) {
+    @repo = init "a" 
+
+    first = commit @repo
+
+    @second = commit @repo, first
+
+    repo.tags.create('v1', repo.head.target, {message: 'msg'})
+  }
 
   context "parse" do
     it "a single sha becomes a single push" do

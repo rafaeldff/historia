@@ -2,14 +2,13 @@ require 'spec_helper.rb'
 require 'fileutils'
 
 describe Historia::Revision do
-  @repo, @second = [nil, nil, nil, nil, nil]
   let (:repo_dir)  { 'spec/support/fixtures/a' }
   attr_reader :repo
   attr_reader :second
   attr_reader :second_short
 
   before (:all) {
-    @repo = init "a" 
+    @repo = init "simple" 
 
     first = commit @repo
 
