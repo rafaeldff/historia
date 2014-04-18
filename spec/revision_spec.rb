@@ -2,20 +2,18 @@ require 'spec_helper.rb'
 require 'fileutils'
 
 describe Historia::Revision do
-  @repo, @first,  @second, @second_short = [nil, nil, nil, nil, nil]
+  @repo, @second = [nil, nil, nil, nil, nil]
   let (:repo_dir)  { 'spec/support/fixtures/a' }
   attr_reader :repo
-  attr_reader :first
   attr_reader :second
   attr_reader :second_short
 
   before (:all) {
     @repo = init "a" 
 
-    @first = commit @repo
+    first = commit @repo
 
-    @second = commit @repo, @first
-    @second_short = @second[0..6]
+    @second = commit @repo, first
 
     repo.tags.create('v1', repo.head.target, {message: 'msg'})
   }
