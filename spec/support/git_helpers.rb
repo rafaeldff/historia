@@ -7,10 +7,12 @@ def init repo
 end
 
 def commit repo, *parents
-  oid = repo.write("x", :blob)
+  r = (rand() * 100000000).to_i.to_s
+
+  oid = repo.write(r, :blob)
   index = Rugged::Index.new.tap{|index| index.add path: "f", oid: oid, mode:  0100644}
 
-  Rugged::Commit.create(repo,  {message: "message",
+  Rugged::Commit.create(repo,  {message: "message #{r}",
                                 update_ref: 'HEAD',
                                 tree: index.write_tree(repo),
                                 parents: parents})

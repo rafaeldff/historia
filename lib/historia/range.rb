@@ -16,7 +16,11 @@ class Historia::Range
     rangespec.split(/\s+/).flat_map do |range_part|
       if (negation = /^\^(.*)$/.match range_part)
         [hide(revision negation[1])]
-      elsif (symetric = /^(.*)\.\.(.*)$/.match range_part)
+      elsif (asymetric = /^([^.]*)\.{3}([^.]*)$/.match range_part)
+        [push(revision asymetric[1]),
+         push(revision asymetric[2]),
+         hide(revision repo.merge_base(asymetric[1], asymetric[2]))]
+      elsif (symetric = /^([^.]*)\.{2}([^.]*)$/.match range_part)
         [hide(revision symetric[1]),
          push(revision symetric[2])]
       else
